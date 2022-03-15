@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+app.use(express.json());
 
 let data = [
   {
@@ -20,6 +21,11 @@ let data = [
   {
     id: 4,
     name: "Mary Poppendieck",
+    number: "39-23-6423122",
+  },
+  {
+    id: 5,
+    name: "a",
     number: "39-23-6423122",
   },
 ];
@@ -53,6 +59,26 @@ app.delete("/api/persons/:id", (req, res) => {
 
   data = data.filter((p) => p.id !== id);
   res.status(204).end;
+});
+
+//--------------POST------------------------------------
+
+app.post("/api/persons", (req, res) => {
+  const body = req.body;
+  if (!body.number || !body.name) {
+    return res.status(400).json({ error: "name or number is missing" }).end();
+  }
+  if (data.some((p) => p.name.toUpperCase() == body.name.toUpperCase())) {
+    return res.status(400).json({ error: "name repeated" }).end();
+  }
+  const newPerson = {
+    id: Math.random() * 100,
+    name: body.name,
+    number: body.number,
+  };
+
+  data = data.concat(newPerson);
+  res.json(newPerson);
 });
 
 const PORT = 3001;
