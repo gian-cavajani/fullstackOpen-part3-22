@@ -28,6 +28,15 @@ app.get("/api/persons", (req, res) => {
   res.json(data);
 });
 
+app.get("/api/persons/:id", (req, res) => {
+  const id = Number(req.params.id);
+  const person = data.find((p) => p.id === id);
+  if (!person) {
+    res.status(404).send("404 person not found");
+  }
+  res.json(person);
+});
+
 app.get("/info", (req, res) => {
   const peopleCount = data.length;
   res.send(
