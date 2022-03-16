@@ -1,3 +1,4 @@
+// mongodb+srv://gian:<password>@cluster0.sbqjy.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
