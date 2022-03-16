@@ -6,6 +6,7 @@ require("dotenv").config();
 const Person = require("./models/person");
 
 const morgan = require("morgan");
+const note = require("../part3/models/note");
 app.use(cors());
 app.use(express.static("build"));
 app.use(express.json());
@@ -65,17 +66,17 @@ app.post("/api/persons", (req, res) => {
   if (!body.number || !body.name) {
     return res.status(400).json({ error: "name or number is missing" }).end();
   }
-  if (data.some((p) => p.name.toUpperCase() == body.name.toUpperCase())) {
-    return res.status(400).json({ error: "name repeated" }).end();
-  }
-  const newPerson = {
-    id: Math.random() * 100,
+  // if (data.some((p) => p.name.toUpperCase() == body.name.toUpperCase())) {
+  //   return res.status(400).json({ error: "name repeated" }).end();
+  // }
+  const newPerson = new Person({
+    // id: Math.random() * 100,
     name: body.name,
     number: body.number,
-  };
-
-  data = data.concat(newPerson);
-  res.json(newPerson);
+  });
+  newPerson.save().then((savedPerson) => {
+    res.json(savedPerson);
+  });
 });
 
 const PORT = process.env.PORT || 3001;
