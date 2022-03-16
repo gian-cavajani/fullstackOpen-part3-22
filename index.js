@@ -6,7 +6,6 @@ require("dotenv").config();
 const Person = require("./models/person");
 
 const morgan = require("morgan");
-const note = require("../part3/models/note");
 app.use(cors());
 app.use(express.static("build"));
 app.use(express.json());
