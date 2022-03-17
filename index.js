@@ -1,36 +1,36 @@
-const express = require("express");
+const express = require('express');
 const app = express();
-const cors = require("cors");
+const cors = require('cors');
 
-require("dotenv").config();
-const Person = require("./models/person");
+require('dotenv').config();
+const Person = require('./models/person');
 
-const morgan = require("morgan");
+const morgan = require('morgan');
 app.use(cors());
-app.use(express.static("build"));
+app.use(express.static('build'));
 app.use(express.json());
 
-morgan.token("body", (req, res) => {
+morgan.token('body', (req) => {
   return JSON.stringify(req.body);
 });
 
 const errorHandler = (error, req, res, next) => {
-  if (error.name === "CastError") {
-    return res.status(400).send({ error: "malformatted id" });
-  } else if (error.name === "ValidationError") {
+  if (error.name === 'CastError') {
+    return res.status(400).send({ error: 'malformatted id' });
+  } else if (error.name === 'ValidationError') {
     return res.status(400).json({ error: error.message });
   }
   next(error);
 };
 
 app.use(
-  morgan(":method :url :status :res[content-length] - :response-time ms :body")
+  morgan(':method :url :status :res[content-length] - :response-time ms :body')
 );
 
 //--------------GET------------------------------------
 
 //all
-app.get("/api/persons", (req, res, next) => {
+app.get('/api/persons', (req, res, next) => {
   Person.find({})
     .then((persons) => {
       res.json(persons);
@@ -38,13 +38,13 @@ app.get("/api/persons", (req, res, next) => {
     .catch((error) => next(error));
 });
 //individual
-app.get("/api/persons/:id", (req, res, next) => {
+app.get('/api/persons/:id', (req, res, next) => {
   Person.findById(req.params.id)
     .then((person) => {
       if (person) {
         res.json(person);
       } else {
-        res.status(404).send("404: person does not exist");
+        res.status(404).send('404: person does not exist');
       }
     })
     .catch((err) => {
@@ -52,7 +52,7 @@ app.get("/api/persons/:id", (req, res, next) => {
     });
 });
 //info
-app.get("/info", (req, res) => {
+app.get('/info', (req, res, next) => {
   Person.find({})
     .then((persons) => {
       console.log(persons.length);
@@ -67,7 +67,7 @@ app.get("/info", (req, res) => {
 
 //--------------DELETE------------------------------------
 
-app.delete("/api/persons/:id", (req, res) => {
+app.delete('/api/persons/:id', (req, res, next) => {
   Person.findByIdAndDelete(req.params.id)
     .then(res.status(204).send({}))
     .catch((err) => {
@@ -77,7 +77,7 @@ app.delete("/api/persons/:id", (req, res) => {
 
 //--------------POST------------------------------------
 
-app.post("/api/persons", (req, res, next) => {
+app.post('/api/persons', (req, res, next) => {
   const body = req.body;
 
   const newPerson = new Person({
@@ -94,7 +94,7 @@ app.post("/api/persons", (req, res, next) => {
 });
 //-------------UPDATE--------------------------------------------------------
 
-app.put("/api/persons/:id", (req, res, next) => {
+app.put('/api/persons/:id', (req, res, next) => {
   console.log(req.body);
   const newPerson = {
     name: req.body.name,
