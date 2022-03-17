@@ -87,7 +87,23 @@ app.post("/api/persons", (req, res, next) => {
     })
     .catch((error) => next(error));
 });
+//-------------UPDATE--------------------------------------------------------
+
+app.put("/api/persons/:id", (req, res, next) => {
+  console.log(req.body);
+  const newPerson = {
+    name: req.body.name,
+    number: req.body.number,
+  };
+  Person.findByIdAndUpdate(req.params.id, newPerson, { new: true })
+    .then((updPerson) => {
+      res.json(updPerson);
+    })
+    .catch((error) => next(error));
+});
+//---------------------------------------------------------------------
 
 app.use(errorHandler);
+
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {});
