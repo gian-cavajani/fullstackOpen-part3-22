@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-
 const url = process.env.MONGODB_URI;
 
 mongoose
@@ -11,6 +10,22 @@ mongoose
     console.log("error connecting to MongoDB:", error.message);
   });
 
+const validarNum = (num) => {
+  let count = 0;
+  num.split("").map((n) => {
+    if (n === "-") {
+      count++;
+    }
+  });
+  if (count === 0) {
+    return parseInt(num);
+  }
+  return (
+    (num[2] === "-" && count === 1) ||
+    (num[3] === "-" && count === 1) ||
+    count === 0
+  );
+};
 const personSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -19,10 +34,16 @@ const personSchema = new mongoose.Schema({
   },
   number: {
     type: String,
+    minlength: 8,
     required: true,
+    unique: true,
+    validate: {
+      validator: (num) => {
+        return validarNum(num);
+      },
+    },
   },
 });
-
 personSchema.set("toJSON", {
   //borra las props __v y __id que mongoDB crea.
   transform: (document, returnedObject) => {
