@@ -15,8 +15,7 @@ morgan.token("body", (req, res) => {
 });
 
 const errorHandler = (error, req, res, next) => {
-  console.log(error);
-  return res.status(404).send({ error: error });
+  return res.status(400).send({ error: error.message });
   next(error);
 };
 
@@ -38,7 +37,11 @@ app.get("/api/persons", (req, res, next) => {
 app.get("/api/persons/:id", (req, res, next) => {
   Person.findById(req.params.id)
     .then((person) => {
-      res.json(person);
+      if (person) {
+        res.json(person);
+      } else {
+        res.status(404).send("404: person does not exist");
+      }
     })
     .catch((err) => {
       next(err);
