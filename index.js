@@ -26,6 +26,7 @@ app.use(
 
 //--------------GET------------------------------------
 
+//all
 app.get("/api/persons", (req, res, next) => {
   Person.find({})
     .then((persons) => {
@@ -33,7 +34,7 @@ app.get("/api/persons", (req, res, next) => {
     })
     .catch((error) => next(error));
 });
-
+//individual
 app.get("/api/persons/:id", (req, res, next) => {
   Person.findById(req.params.id)
     .then((person) => {
@@ -43,7 +44,7 @@ app.get("/api/persons/:id", (req, res, next) => {
       next(err);
     });
 });
-
+//info
 app.get("/info", (req, res) => {
   Person.find({})
     .then((persons) => {
